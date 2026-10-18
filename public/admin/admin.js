@@ -14,7 +14,7 @@ const socket = connect('admin', {
       $('stressToggle').checked = msg.simulator?.stress ?? false;
     }
     if (msg.type === 'events') logEvents(msg);
-    if (msg.type === 'state') renderState(msg.state);
+    if (msg.type === 'state') { renderState(msg.state); renderLikes(msg.likes); }
   },
 });
 
@@ -35,7 +35,7 @@ $('chatForm').addEventListener('submit', (e) => {
 });
 document.querySelectorAll('[data-like]').forEach((b) =>
   b.addEventListener('click', () => socket.send({ cmd: 'sim.like', name: name(), count: Number(b.dataset.like) })));
-$('giftBtn').addEventListener('click', () => socket.send({ cmd: 'sim.gift', name: name(), gift: $('giftName').value }));
+$('giftBtn').addEventListener('click', () => socket.send({ cmd: 'sim.gift', name: name(), gift: $('giftName').value, count: Number($('giftCount').value) }));
 $('followBtn').addEventListener('click', () => socket.send({ cmd: 'sim.follow', name: name() }));
 $('botsToggle').addEventListener('change', (e) => socket.send({ cmd: 'sim.bots', on: e.target.checked }));
 $('stressToggle').addEventListener('change', (e) => socket.send({ cmd: 'sim.stress', on: e.target.checked }));
@@ -90,4 +90,10 @@ function renderState(st) {
     li.append(pts);
     return li;
   }));
+}
+
+function renderLikes(likes) {
+  if (!likes) return;
+  $('likes').textContent = `${likes.meter.toLocaleString('en')} / ${likes.goal.toLocaleString('en')} (total ${likes.total.toLocaleString('en')})`;
+  $('doubles').textContent = likes.pendingDoubles;
 }

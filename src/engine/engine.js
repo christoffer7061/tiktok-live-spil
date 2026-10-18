@@ -33,7 +33,7 @@ export class Engine extends EventEmitter {
     this.lastSummary = null;
     this.vote = null;
     this.multiplier = 1;       // 2 during a double-points round
-    this.nextMultiplier = 1;
+    this.pendingDoubles = 0;   // double-points rounds earned by the like meter
 
     this.timer = null;
     this.phaseStartedAt = 0;
@@ -103,10 +103,17 @@ export class Engine extends EventEmitter {
     this.#changed();
   }
 
-  // Next round gets double points (used by the like meter).
+  // Earn a double-points round (used by the like meter). At most 3 are
+  // saved up, so likes can never turn every round into double points.
   queueDoublePoints() {
-    this.nextMultiplier = 2;
+    if (this.pendingDoubles >= 3) return false;
+    this.pendingDoubles++;
     this.#changed();
+    return true;
+  }
+
+  get nextMultiplier() {
+    return this.pendingDoubles > 0 ? 2 : 1;
   }
 
   // --- Chat -> answers and votes --------------------------------------------------
@@ -137,7 +144,7 @@ export class Engine extends EventEmitter {
     this.typeKey = this.nextTypeKey ?? this.randomType(this.typeKey);
     this.nextTypeKey = null;
     this.multiplier = this.nextMultiplier;
-    this.nextMultiplier = 1;
+    if (this.multiplier > 1) this.pendingDoubles--;
     this.#setPhase('ready', this.#sec('readySeconds', 3));
   }
 
@@ -283,6 +290,7 @@ export class Engine extends EventEmitter {
       difficulty: this.phase === 'idle' ? null : this.difficulty(),
       multiplier: this.multiplier,
       nextMultiplier: this.nextMultiplier,
+      pendingDoubles: this.pendingDoubles,
       players: this.scoreboard.size,
     };
     if (this.round && ['question', 'reveal', 'winner'].includes(this.phase)) {

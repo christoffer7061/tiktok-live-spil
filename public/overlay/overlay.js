@@ -17,16 +17,15 @@ const MAX_ROWS = 10;
 const confetti = new Confetti($('confetti'));
 let state = { phase: 'idle' };
 let phaseEndsAt = 0;
-let likes = 0;
-let likeGoal = 1000;
+const fxConfetti = new Confetti($('fxConfetti'));
 
 connect('overlay', {
   onOpen: () => $('offline').classList.remove('show'),
   onClose: () => $('offline').classList.add('show'),
   onMessage(msg) {
-    if (msg.type === 'hello') likeGoal = msg.config?.likes?.meterGoal ?? likeGoal;
     if (msg.type === 'events') msg.events.forEach(handleEvent);
-    if (msg.type === 'state') render(msg.state);
+    if (msg.type === 'state') { render(msg.state); renderLikes(msg.likes, msg.state); }
+    if (msg.type === 'effects') msg.effects.forEach(playEffect);
   },
 });
 
@@ -223,17 +222,10 @@ function tick() {
 }
 requestAnimationFrame(tick);
 
-// --- Likes, gifts, chat ---------------------------------------------------------
+// --- Chat (only while waiting) ----------------------------------------------------
 function handleEvent(e) {
-  // Chat is only shown while no question is open, so nobody can copy answers.
+  // Chat is only shown while no game is running, so nobody can copy answers.
   if (e.type === 'chat' && state.phase === 'idle') addChatRow(e.user.name, e.text);
-  if (e.type === 'like') {
-    likes += e.likeCount;
-    $('likeCount').textContent = likes.toLocaleString('en');
-    $('likeFill').style.width = `${Math.min(100, ((likes % likeGoal) / likeGoal) * 100)}%`;
-  }
-  if (e.type === 'gift') showGift(`🎁 ${e.user.name} sent ${e.gift.count > 1 ? e.gift.count + '× ' : ''}${e.gift.name}`);
-  if (e.type === 'follow') showGift(`➕ ${e.user.name} followed`);
 }
 
 function addChatRow(name, text) {
@@ -246,10 +238,99 @@ function addChatRow(name, text) {
   while (list.children.length > MAX_ROWS) list.lastChild.remove();
 }
 
-function showGift(text) {
+// --- Like meter ------------------------------------------------------------------
+let lastLikes = 0;
+function renderLikes(likes, st) {
+  if (!likes) return;
+  $('likeCount').textContent = likes.total.toLocaleString('en');
+  $('likeFill').style.width = `${Math.min(100, (likes.meter / likes.goal) * 100)}%`;
+  const box = document.querySelector('.likes');
+  box.classList.toggle('ready', likes.pendingDoubles > 0);
+  const left = Math.max(0, likes.goal - likes.meter).toLocaleString('en');
+  $('likeText').textContent = st.multiplier > 1 && ['ready', 'question'].includes(st.phase)
+    ? '🔥 2× points this round!'
+    : likes.pendingDoubles > 0 ? `2× points next round! (${left} likes for another)` : `${left} likes to unlock 2× points!`;
+  if (likes.total > lastLikes) {
+    box.classList.add('bump');
+    setTimeout(() => box.classList.remove('bump'), 150);
+  }
+  lastLikes = likes.total;
+}
+
+// --- Gift and like effects --------------------------------------------------------
+const MAX_PARTICLES = 90;
+const MAX_POPS = 4;
+
+function playEffect(fx) {
+  if (fx.kind === 'gift') {
+    const what = `${fx.count > 1 ? fx.count + '× ' : ''}${fx.gift}`;
+    showPop(`🎁 ${fx.name} sent ${what}`, fx.bonus ? `+${fx.bonus}` : '', fx.big);
+    if (fx.effect === 'hearts') particles(['❤️', '💖', '💕', '💗'], 10, 'rise');
+    else if (fx.effect === 'fireworks') {
+      bigBanner(`${fx.name}`, `sent ${what}! 🎆`);
+      fxConfetti.start();
+      setTimeout(() => fxConfetti.stop(), 3500);
+    } else particles(['✨', '⭐', '🌟', '💫'], 12, 'burst');
+  }
+  if (fx.kind === 'likeGoal') {
+    bigBanner('❤️ LIKE GOAL! ❤️', 'Next round: DOUBLE POINTS');
+    particles(['❤️', '💖', '💕'], 24, 'rise');
+  }
+  if (fx.kind === 'follow') showPop(`➕ ${fx.name} followed`);
+  if (fx.kind === 'share') showPop(`🔁 ${fx.name} shared the LIVE`);
+}
+
+function showPop(text, bonus = '', big = false) {
+  const box = $('gifts');
+  while (box.children.length >= MAX_POPS) box.firstChild.remove();
   const el = document.createElement('div');
-  el.className = 'gift-pop';
+  el.className = `gift-pop${big ? ' big' : ''}`;
   el.textContent = text;
-  $('gifts').append(el);
+  if (bonus) {
+    const b = document.createElement('span');
+    b.className = 'bonus';
+    b.textContent = bonus;
+    el.append(b);
+  }
+  box.append(el);
   setTimeout(() => el.remove(), 2700);
+}
+
+function particles(emojis, count, kind) {
+  const layer = $('fx');
+  const room = MAX_PARTICLES - layer.children.length;
+  for (let i = 0; i < Math.min(count, room); i++) {
+    const p = document.createElement('span');
+    p.className = `particle ${kind}`;
+    p.textContent = emojis[i % emojis.length];
+    if (kind === 'rise') {
+      p.style.left = `${700 + Math.random() * 320}px`;
+      p.style.top = '1700px';
+      p.style.setProperty('--dx', `${-200 + Math.random() * 300}px`);
+      p.style.animationDelay = `${Math.random() * 0.6}s`;
+    } else {
+      p.style.left = `${480 + Math.random() * 120}px`;
+      p.style.top = `${900 + Math.random() * 120}px`;
+      const a = Math.random() * Math.PI * 2;
+      const r = 250 + Math.random() * 300;
+      p.style.setProperty('--dx', `${Math.cos(a) * r}px`);
+      p.style.setProperty('--dy', `${Math.sin(a) * r}px`);
+    }
+    p.addEventListener('animationend', () => p.remove());
+    layer.append(p);
+  }
+}
+
+let bannerTimer;
+function bigBanner(title, subtitle) {
+  const el = $('bigBanner');
+  el.textContent = title;
+  const small = document.createElement('small');
+  small.textContent = subtitle;
+  el.append(small);
+  el.classList.remove('show');
+  void el.offsetWidth; // restart the animation
+  el.classList.add('show');
+  clearTimeout(bannerTimer);
+  bannerTimer = setTimeout(() => el.classList.remove('show'), 3300);
 }

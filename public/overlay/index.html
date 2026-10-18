@@ -28,8 +28,11 @@
     </section>
 
     <section class="likes">
-      <div class="likes-label">❤️ Likes <span id="likeCount">0</span></div>
-      <div class="meter"><div class="meter-fill" id="likeFill"></div></div>
+      <div class="likes-label">❤️ <span id="likeCount">0</span></div>
+      <div class="meter">
+        <div class="meter-fill" id="likeFill"></div>
+        <div class="meter-text" id="likeText">Fill with likes for 2× points!</div>
+      </div>
     </section>
 
     <footer class="how" id="how">Type your answer in the chat! Only your first answer counts.</footer>
@@ -56,7 +59,10 @@
       </div>
     </section>
 
+    <canvas id="fxConfetti" class="fx-confetti" width="1080" height="1920"></canvas>
+    <div class="fx" id="fx"></div>
     <div class="gifts" id="gifts"></div>
+    <div class="big-banner" id="bigBanner"></div>
     <div class="paused" id="paused">PAUSED</div>
     <div class="offline" id="offline">Reconnecting…</div>
   </div>

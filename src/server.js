@@ -8,11 +8,13 @@ import { loadConfig, ROOT } from './config.js';
 import { Hub } from './hub.js';
 import { Simulator } from './connection/simulator.js';
 import { Engine } from './engine/engine.js';
+import { Effects } from './engine/effects.js';
 
 const config = loadConfig();
 const hub = new Hub();
 const simulator = new Simulator(hub);
 const engine = new Engine(hub, config);
+const effects = new Effects(hub, engine, config);
 
 const PUBLIC = path.join(ROOT, 'public');
 const MIME = {
@@ -62,7 +64,7 @@ wss.on('connection', (ws, req) => {
   clients[role].add(ws);
   send(ws, { type: 'hello', role, config: publicConfig() });
   send(ws, { type: 'status', status: hub.connectionStatus, simulator: simulator.status() });
-  send(ws, { type: 'state', state: engine.snapshot({ forAdmin: role === 'admin' }) });
+  send(ws, { type: 'state', state: engine.snapshot({ forAdmin: role === 'admin' }), likes: effects.snapshot() });
 
   ws.on('message', (raw) => {
     if (role !== 'admin') return; // only the admin page may control the game
@@ -108,11 +110,20 @@ setInterval(() => {
 // become 10 small updates instead of 50.
 let stateDirty = true;
 engine.on('changed', () => { stateDirty = true; });
+effects.on('changed', () => { stateDirty = true; });
+// Gift and like-goal effects. Capped per tick so a gift storm cannot flood the screen.
+let pendingEffects = [];
+effects.on('effect', (fx) => { if (pendingEffects.length < 20) pendingEffects.push(fx); });
 setInterval(() => {
+  if (pendingEffects.length) {
+    broadcastAll({ type: 'effects', effects: pendingEffects });
+    pendingEffects = [];
+  }
   if (!stateDirty) return;
   stateDirty = false;
-  broadcast('overlay', { type: 'state', state: engine.snapshot() });
-  broadcast('admin', { type: 'state', state: engine.snapshot({ forAdmin: true }) });
+  const likes = effects.snapshot();
+  broadcast('overlay', { type: 'state', state: engine.snapshot(), likes });
+  broadcast('admin', { type: 'state', state: engine.snapshot({ forAdmin: true }), likes });
 }, 100);
 
 hub.on('status', (status) => broadcastAll({ type: 'status', status, simulator: simulator.status() }));

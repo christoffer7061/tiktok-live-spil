@@ -3,7 +3,10 @@
   "connection": "simulator",
   "port": 3000,
   "language": "en",
-  "screen": { "width": 1080, "height": 1920 },
+  "screen": {
+    "width": 1080,
+    "height": 1920
+  },
   "round": {
     "answerSeconds": 20,
     "readySeconds": 3,
@@ -12,7 +15,11 @@
     "leaderboardSeconds": 6,
     "voteSeconds": 10
   },
-  "gameTypes": ["math", "quiz", "truefalse"],
+  "gameTypes": [
+    "math",
+    "quiz",
+    "truefalse"
+  ],
   "difficulty": "rising",
   "scoring": {
     "maxPoints": 1000,
@@ -22,14 +29,19 @@
   "gifts": {
     "bonusPointsPerGift": 50,
     "maxBonusPerRound": 200,
+    "bigGiftDiamonds": 100,
     "effects": {
       "Rose": "hearts",
+      "Heart": "hearts",
+      "Heart Me": "hearts",
+      "Finger Heart": "hearts",
+      "TikTok": "sparkle",
+      "GG": "sparkle",
       "default": "sparkle"
     }
   },
   "likes": {
-    "meterGoal": 1000,
-    "reward": "doublePointsRound"
+    "meterGoal": 1000
   },
   "sound": true
 }

@@ -11,6 +11,7 @@ const GIFTS = [
   { name: 'Rose', diamonds: 1 },
   { name: 'Heart', diamonds: 5 },
   { name: 'Galaxy', diamonds: 1000 },
+  { name: 'Lion', diamonds: 29999 },
 ];
 
 const pick = (list) => list[Math.floor(Math.random() * list.length)];
@@ -72,7 +73,7 @@ export class Simulator {
       const r = Math.random();
       if (r < 0.15) this.chat(name, pick(CHATTER));
       else if (r < 0.6) this.like(name, Math.ceil(rand(1, 15)));
-      else if (r < 0.62) this.gift(name, pick(GIFTS).name);
+      else if (r < 0.62) this.gift(name, pick(GIFTS.slice(0, 2)).name, Math.ceil(rand(1, 5)));
     }, 700);
   }
 
