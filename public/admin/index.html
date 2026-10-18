@@ -18,12 +18,20 @@
         <section class="card">
           <h2>Game</h2>
           <div class="row">
-            <button data-cmd="game.start" class="primary" disabled>Start</button>
-            <button data-cmd="game.pause" disabled>Pause</button>
-            <button data-cmd="game.skip" disabled>Skip round</button>
-            <button data-cmd="game.reset" class="danger" disabled>Reset points</button>
+            <button data-cmd="game.start" class="primary" id="startBtn">Start</button>
+            <button data-cmd="game.pause" id="pauseBtn">Pause</button>
+            <button data-cmd="game.skip">Skip round</button>
+            <button data-cmd="game.reset" class="danger">Reset</button>
           </div>
-          <p class="hint" id="gameHint">Game controls arrive with the game engine (milestone 2).</p>
+          <dl class="facts">
+            <div><dt>Phase</dt><dd id="phase">idle</dd></div>
+            <div><dt>Round</dt><dd id="round">–</dd></div>
+            <div><dt>Game</dt><dd id="game">–</dd></div>
+            <div><dt>Difficulty</dt><dd id="difficulty">–</dd></div>
+            <div><dt>Question</dt><dd id="questionText">–</dd></div>
+            <div><dt>Answer</dt><dd id="answer">–</dd></div>
+            <div><dt>Answers</dt><dd id="answers">–</dd></div>
+          </dl>
         </section>
 
         <section class="card">

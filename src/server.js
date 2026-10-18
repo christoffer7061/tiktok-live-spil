@@ -7,10 +7,12 @@ import { WebSocketServer } from 'ws';
 import { loadConfig, ROOT } from './config.js';
 import { Hub } from './hub.js';
 import { Simulator } from './connection/simulator.js';
+import { Engine } from './engine/engine.js';
 
 const config = loadConfig();
 const hub = new Hub();
 const simulator = new Simulator(hub);
+const engine = new Engine(hub, config);
 
 const PUBLIC = path.join(ROOT, 'public');
 const MIME = {
@@ -60,6 +62,7 @@ wss.on('connection', (ws, req) => {
   clients[role].add(ws);
   send(ws, { type: 'hello', role, config: publicConfig() });
   send(ws, { type: 'status', status: hub.connectionStatus, simulator: simulator.status() });
+  send(ws, { type: 'state', state: engine.snapshot({ forAdmin: role === 'admin' }) });
 
   ws.on('message', (raw) => {
     if (role !== 'admin') return; // only the admin page may control the game
@@ -101,6 +104,17 @@ setInterval(() => {
   broadcastAll({ type: 'events', events: batch, total });
 }, 100);
 
+// Game state is also sent at most every 100 ms, so 50 answers per second
+// become 10 small updates instead of 50.
+let stateDirty = true;
+engine.on('changed', () => { stateDirty = true; });
+setInterval(() => {
+  if (!stateDirty) return;
+  stateDirty = false;
+  broadcast('overlay', { type: 'state', state: engine.snapshot() });
+  broadcast('admin', { type: 'state', state: engine.snapshot({ forAdmin: true }) });
+}, 100);
+
 hub.on('status', (status) => broadcastAll({ type: 'status', status, simulator: simulator.status() }));
 
 simulator.start();
@@ -113,7 +127,7 @@ server.listen(config.port, () => {
 });
 
 for (const sig of ['SIGINT', 'SIGTERM']) {
-  process.on(sig, () => { simulator.stop(); server.close(); process.exit(0); });
+  process.on(sig, () => { engine.stop(); simulator.stop(); server.close(); process.exit(0); });
 }
 
-export { hub, simulator, broadcastAll };
+export { hub, simulator, engine };

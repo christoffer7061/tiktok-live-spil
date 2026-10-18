@@ -62,3 +62,41 @@ body { font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-se
 
 .offline { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: #c0392b; padding: 12px 30px; border-radius: 20px; font-size: 30px; font-weight: 700; display: none; }
 .offline.show { display: block; }
+
+/* --- Milestone 2: phases ---------------------------------------------------- */
+.round-info:empty { display: none; }
+.sub { font-size: 40px; color: var(--muted); margin: -14px 0 30px; min-height: 0; }
+.sub:empty { display: none; }
+.prompt { transition: color 200ms; }
+#stage[data-phase="ready"] .prompt { font-size: 220px; color: var(--accent2); }
+#stage[data-phase="reveal"] .prompt, #stage[data-phase="winner"] .prompt { color: var(--good); }
+#stage[data-phase="idle"] .timer, #stage[data-phase="winner"] .timer { visibility: hidden; }
+
+.list li .rank { width: 70px; text-align: right; font-weight: 900; color: var(--muted); flex: none; }
+.list li .ms { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; flex: none; }
+.list li:nth-child(1) .rank { color: var(--gold); }
+.list li:nth-child(2) .rank { color: #d9e2ec; }
+.list li:nth-child(3) .rank { color: #e0a370; }
+.list li .who { max-width: 600px; }
+.list li.old { animation: none; }
+.more { font-size: 36px; color: var(--muted); text-align: center; padding-top: 10px; }
+.more:empty { display: none; }
+.empty-hint { color: var(--muted); font-size: 40px; text-align: center; margin-top: 60px; }
+
+.winner { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(10, 4, 25, 0.82); }
+#stage[data-phase="winner"] .winner { display: flex; }
+.winner canvas { position: absolute; inset: 0; pointer-events: none; }
+.winner-card { position: relative; width: 900px; text-align: center; background: linear-gradient(160deg, #4b1680, #22104a); border: 4px solid var(--gold); border-radius: 50px; padding: 70px 50px; animation: pop 500ms cubic-bezier(.2, 1.6, .4, 1); }
+@keyframes pop { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
+.winner-label { font-size: 44px; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 3px; }
+.winner-name { font-size: 120px; font-weight: 900; margin: 20px 0 6px; word-break: break-word; line-height: 1.05; }
+.winner-time { font-size: 44px; color: var(--accent2); font-weight: 700; }
+.podium { list-style: none; margin: 50px 0 40px; display: flex; flex-direction: column; gap: 16px; }
+.podium li { display: flex; justify-content: space-between; font-size: 44px; background: rgba(255,255,255,0.08); border-radius: 24px; padding: 16px 30px; }
+.podium li b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 520px; }
+.winner-answer { font-size: 48px; }
+.winner-answer b { color: var(--good); }
+.winner-stats { font-size: 38px; color: var(--muted); margin-top: 14px; }
+
+.paused { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) rotate(-6deg); font-size: 140px; font-weight: 900; color: var(--gold); text-shadow: 0 8px 30px #000; display: none; }
+#stage.is-paused .paused { display: block; }

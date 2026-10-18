@@ -7,21 +7,23 @@
   <link rel="stylesheet" href="/overlay/overlay.css">
 </head>
 <body>
-  <div id="stage">
+  <div id="stage" data-phase="idle">
     <header class="top">
       <div class="brand">LIVE QUIZ</div>
-      <div class="round-info" id="roundInfo">Get ready</div>
+      <div class="round-info" id="roundInfo"></div>
     </header>
 
-    <section class="question" id="question">
+    <section class="question">
       <div class="game-name" id="gameName">Waiting for the game to start</div>
       <div class="prompt" id="prompt">?</div>
+      <div class="sub" id="sub"></div>
       <div class="timer"><div class="timer-bar" id="timerBar"></div></div>
     </section>
 
-    <section class="panel answers">
+    <section class="panel">
       <div class="panel-title"><span id="panelTitle">Live chat</span><span class="count" id="answerCount"></span></div>
       <ol class="list" id="list"></ol>
+      <div class="more" id="more"></div>
     </section>
 
     <section class="likes">
@@ -29,10 +31,23 @@
       <div class="meter"><div class="meter-fill" id="likeFill"></div></div>
     </section>
 
-    <div class="gifts" id="gifts"></div>
-
     <footer class="how" id="how">Type your answer in the chat! Only your first answer counts.</footer>
 
+    <!-- Round winner screen -->
+    <section class="winner" id="winner">
+      <canvas id="confetti" width="1080" height="1920"></canvas>
+      <div class="winner-card">
+        <div class="winner-label" id="winnerLabel">Round winner</div>
+        <div class="winner-name" id="winnerName"></div>
+        <div class="winner-time" id="winnerTime"></div>
+        <ol class="podium" id="podium"></ol>
+        <div class="winner-answer">Answer: <b id="winnerAnswer"></b></div>
+        <div class="winner-stats" id="winnerStats"></div>
+      </div>
+    </section>
+
+    <div class="gifts" id="gifts"></div>
+    <div class="paused" id="paused">PAUSED</div>
     <div class="offline" id="offline">Reconnecting…</div>
   </div>
   <script type="module" src="/overlay/overlay.js"></script>

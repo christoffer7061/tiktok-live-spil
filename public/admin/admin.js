@@ -14,6 +14,7 @@ const socket = connect('admin', {
       $('stressToggle').checked = msg.simulator?.stress ?? false;
     }
     if (msg.type === 'events') logEvents(msg);
+    if (msg.type === 'state') renderState(msg.state);
   },
 });
 
@@ -59,4 +60,19 @@ function logEvents({ events, total }) {
     log.prepend(li);
   }
   while (log.children.length > 100) log.lastChild.remove();
+}
+
+// Game state panel. The admin page also sees the correct answer.
+function renderState(st) {
+  $('phase').textContent = st.paused ? `${st.phase} (paused)` : st.phase;
+  $('round').textContent = st.roundNumber || '–';
+  $('game').textContent = st.game?.name ?? '–';
+  $('difficulty').textContent = st.difficulty ?? '–';
+  $('questionText').textContent = st.question?.display ?? '–';
+  $('answer').textContent = st.correctAnswer ?? st.result?.correctAnswer ?? '–';
+  $('answers').textContent = st.answerCount != null ? `${st.correctCount} correct / ${st.answerCount}` : '–';
+  $('startBtn').textContent = st.paused ? 'Resume' : 'Start';
+  $('startBtn').disabled = st.phase !== 'idle' && !st.paused;
+  $('pauseBtn').textContent = st.paused ? 'Resume' : 'Pause';
+  $('pauseBtn').disabled = st.phase === 'idle';
 }
