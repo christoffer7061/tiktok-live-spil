@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Live Game</title>
+  <link rel="stylesheet" href="/overlay/overlay.css">
+</head>
+<body>
+  <div id="stage">
+    <header class="top">
+      <div class="brand">LIVE QUIZ</div>
+      <div class="round-info" id="roundInfo">Get ready</div>
+    </header>
+
+    <section class="question" id="question">
+      <div class="game-name" id="gameName">Waiting for the game to start</div>
+      <div class="prompt" id="prompt">?</div>
+      <div class="timer"><div class="timer-bar" id="timerBar"></div></div>
+    </section>
+
+    <section class="panel answers">
+      <div class="panel-title"><span id="panelTitle">Live chat</span><span class="count" id="answerCount"></span></div>
+      <ol class="list" id="list"></ol>
+    </section>
+
+    <section class="likes">
+      <div class="likes-label">❤️ Likes <span id="likeCount">0</span></div>
+      <div class="meter"><div class="meter-fill" id="likeFill"></div></div>
+    </section>
+
+    <div class="gifts" id="gifts"></div>
+
+    <footer class="how" id="how">Type your answer in the chat! Only your first answer counts.</footer>
+
+    <div class="offline" id="offline">Reconnecting…</div>
+  </div>
+  <script type="module" src="/overlay/overlay.js"></script>
+</body>
+</html>

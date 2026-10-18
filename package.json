@@ -1,0 +1,29 @@
+{
+  "name": "tiktok-live-spil",
+  "version": "1.0.0",
+  "description": "Kahoot-style community game for TikTok LIVE, played through comments",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/christoffer7061/tiktok-live-spil.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/christoffer7061/tiktok-live-spil/issues"
+  },
+  "homepage": "https://github.com/christoffer7061/tiktok-live-spil#readme",
+  "dependencies": {
+    "ws": "^8.22.0"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "private": true
+}
