@@ -1,0 +1,47 @@
+{
+  "tiktokUsername": "",
+  "connection": "simulator",
+  "port": 3000,
+  "language": "en",
+  "screen": {
+    "width": 1080,
+    "height": 1920
+  },
+  "round": {
+    "answerSeconds": 20,
+    "readySeconds": 3,
+    "revealSeconds": 4,
+    "winnerSeconds": 6,
+    "leaderboardSeconds": 6,
+    "voteSeconds": 10
+  },
+  "gameTypes": [
+    "math",
+    "quiz",
+    "truefalse"
+  ],
+  "difficulty": "rising",
+  "scoring": {
+    "maxPoints": 1000,
+    "streakBonusPerAnswer": 100,
+    "streakBonusMax": 500
+  },
+  "gifts": {
+    "bonusPointsPerGift": 50,
+    "maxBonusPerRound": 200,
+    "bigGiftDiamonds": 100,
+    "effects": {
+      "Rose": "hearts",
+      "Heart": "hearts",
+      "Heart Me": "hearts",
+      "Finger Heart": "hearts",
+      "TikTok": "sparkle",
+      "GG": "sparkle",
+      "default": "sparkle"
+    }
+  },
+  "likes": {
+    "meterGoal": 1000
+  },
+  "sound": true
+}

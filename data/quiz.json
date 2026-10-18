@@ -1,0 +1,422 @@
+[
+  {
+    "question": "What is the largest planet in our solar system?",
+    "options": [
+      "Jupiter",
+      "Saturn",
+      "Earth",
+      "Neptune"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "How many legs does a spider have?",
+    "options": [
+      "8",
+      "6",
+      "10",
+      "12"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which animal is known as the King of the Jungle?",
+    "options": [
+      "Lion",
+      "Tiger",
+      "Elephant",
+      "Gorilla"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "What color do you get by mixing blue and yellow?",
+    "options": [
+      "Green",
+      "Purple",
+      "Orange",
+      "Brown"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "How many continents are there on Earth?",
+    "options": [
+      "7",
+      "5",
+      "6",
+      "8"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the capital of France?",
+    "options": [
+      "Paris",
+      "Lyon",
+      "Marseille",
+      "Nice"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which planet is known as the Red Planet?",
+    "options": [
+      "Mars",
+      "Venus",
+      "Jupiter",
+      "Mercury"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "What do bees make?",
+    "options": [
+      "Honey",
+      "Milk",
+      "Silk",
+      "Wax paper"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "How many days are there in a leap year?",
+    "options": [
+      "366",
+      "365",
+      "364",
+      "367"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is frozen water called?",
+    "options": [
+      "Ice",
+      "Steam",
+      "Fog",
+      "Dew"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which ocean is the largest?",
+    "options": [
+      "Pacific",
+      "Atlantic",
+      "Indian",
+      "Arctic"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the fastest land animal?",
+    "options": [
+      "Cheetah",
+      "Lion",
+      "Horse",
+      "Greyhound"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "How many sides does a hexagon have?",
+    "options": [
+      "6",
+      "5",
+      "7",
+      "8"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which fruit is famous for keeping the doctor away?",
+    "options": [
+      "Apple",
+      "Banana",
+      "Orange",
+      "Grape"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the main language spoken in Brazil?",
+    "options": [
+      "Portuguese",
+      "Spanish",
+      "English",
+      "French"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the capital of Japan?",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "How many minutes are in an hour?",
+    "options": [
+      "60",
+      "100",
+      "30",
+      "90"
+    ],
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which gas do plants absorb from the air?",
+    "options": [
+      "Carbon dioxide",
+      "Oxygen",
+      "Nitrogen",
+      "Helium"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the capital of Australia?",
+    "options": [
+      "Canberra",
+      "Sydney",
+      "Melbourne",
+      "Perth"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "Who painted the Mona Lisa?",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Picasso",
+      "Van Gogh"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the hardest natural substance?",
+    "options": [
+      "Diamond",
+      "Gold",
+      "Iron",
+      "Granite"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which country gave the Statue of Liberty to the USA?",
+    "options": [
+      "France",
+      "England",
+      "Spain",
+      "Italy"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the chemical symbol for gold?",
+    "options": [
+      "Au",
+      "Ag",
+      "Go",
+      "Gd"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "How many players are on a soccer team on the field?",
+    "options": [
+      "11",
+      "10",
+      "9",
+      "12"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which is the longest river in the world?",
+    "options": [
+      "Nile",
+      "Amazon",
+      "Yangtze",
+      "Mississippi"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "In which country are the pyramids of Giza?",
+    "options": [
+      "Egypt",
+      "Mexico",
+      "Peru",
+      "Sudan"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the smallest prime number?",
+    "options": [
+      "2",
+      "1",
+      "3",
+      "0"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which instrument has 88 keys?",
+    "options": [
+      "Piano",
+      "Guitar",
+      "Violin",
+      "Flute"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which planet has the most famous rings?",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Mars"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the capital of Canada?",
+    "options": [
+      "Ottawa",
+      "Toronto",
+      "Vancouver",
+      "Montreal"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which country invented LEGO?",
+    "options": [
+      "Denmark",
+      "Sweden",
+      "Germany",
+      "Norway"
+    ],
+    "difficulty": "medium"
+  },
+  {
+    "question": "How many bones are in the adult human body?",
+    "options": [
+      "206",
+      "196",
+      "216",
+      "186"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the capital of Iceland?",
+    "options": [
+      "Reykjavik",
+      "Oslo",
+      "Helsinki",
+      "Nuuk"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which element has the chemical symbol K?",
+    "options": [
+      "Potassium",
+      "Krypton",
+      "Calcium",
+      "Iron"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "question": "In which year did humans first land on the Moon?",
+    "options": [
+      "1969",
+      "1965",
+      "1972",
+      "1959"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the largest desert in the world?",
+    "options": [
+      "Antarctica",
+      "Sahara",
+      "Gobi",
+      "Arabian"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which planet spins on its side?",
+    "options": [
+      "Uranus",
+      "Neptune",
+      "Venus",
+      "Mars"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "question": "How many hearts does an octopus have?",
+    "options": [
+      "3",
+      "1",
+      "2",
+      "4"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the most spoken native language in the world?",
+    "options": [
+      "Mandarin Chinese",
+      "English",
+      "Spanish",
+      "Hindi"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which country has the most time zones?",
+    "options": [
+      "France",
+      "Russia",
+      "USA",
+      "China"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the smallest country in the world?",
+    "options": [
+      "Vatican City",
+      "Monaco",
+      "San Marino",
+      "Malta"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which blood type is known as the universal donor?",
+    "options": [
+      "O negative",
+      "AB positive",
+      "A negative",
+      "B positive"
+    ],
+    "difficulty": "hard"
+  }
+]

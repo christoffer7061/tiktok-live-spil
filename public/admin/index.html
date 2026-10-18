@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Game Admin</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Game Admin</h1>
+      <div class="status" id="status"><span class="dot"></span><span id="statusText">Connecting…</span></div>
+    </header>
+
+    <div class="grid">
+      <div class="col">
+        <section class="card">
+          <h2>Game</h2>
+          <div class="row">
+            <button data-cmd="game.start" class="primary" id="startBtn">Start</button>
+            <button data-cmd="game.pause" id="pauseBtn">Pause</button>
+            <button data-cmd="game.skip">Skip round</button>
+            <button data-cmd="game.stop">Stop</button>
+            <button data-cmd="game.resetPoints" class="danger" id="resetBtn">Reset points</button>
+          </div>
+          <dl class="facts">
+            <div><dt>Phase</dt><dd id="phase">idle</dd></div>
+            <div><dt>Round</dt><dd id="round">–</dd></div>
+            <div><dt>Game</dt><dd id="game">–</dd></div>
+            <div><dt>Difficulty</dt><dd id="difficulty">–</dd></div>
+            <div><dt>Question</dt><dd id="questionText">–</dd></div>
+            <div><dt>Answer</dt><dd id="answer">–</dd></div>
+            <div><dt>Answers</dt><dd id="answers">–</dd></div>
+            <div><dt>Like meter</dt><dd id="likes">–</dd></div>
+            <div><dt>2× rounds saved</dt><dd id="doubles">0</dd></div>
+          </dl>
+        </section>
+
+        <section class="card">
+          <h2>Simulator</h2>
+          <label>Viewer name <input id="simName" value="Tester" maxlength="40"></label>
+          <form id="chatForm" class="row">
+            <input id="simText" placeholder="Comment, e.g. 56" autocomplete="off">
+            <button class="primary">Send comment</button>
+          </form>
+          <div class="row">
+            <button data-like="1">❤️ +1 like</button>
+            <button data-like="50">❤️ +50 likes</button>
+            <button data-like="500">❤️ +500 likes</button>
+          </div>
+          <div class="row">
+            <select id="giftName">
+              <option>Rose</option>
+              <option>Heart</option>
+              <option>Galaxy</option>
+              <option>Lion</option>
+            </select>
+            <select id="giftCount">
+              <option value="1">×1</option>
+              <option value="5">×5</option>
+              <option value="10">×10</option>
+            </select>
+            <button id="giftBtn">🎁 Send gift</button>
+            <button id="followBtn">➕ Follow</button>
+          </div>
+          <div class="row toggles">
+            <label class="toggle"><input type="checkbox" id="botsToggle"> Bot mode (20 fake viewers)</label>
+            <label class="toggle"><input type="checkbox" id="stressToggle"> Stress test (50 comments/s)</label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Leaderboard <span class="muted" id="players"></span></h2>
+          <ol class="board" id="board"><li class="muted">No points yet</li></ol>
+        </section>
+
+        <section class="card">
+          <h2>Event log <span class="muted" id="rate"></span></h2>
+          <ol class="log" id="log"></ol>
+        </section>
+      </div>
+
+      <div class="col preview-col">
+        <section class="card">
+          <h2>Game screen preview <a href="/" target="_blank">open ↗</a></h2>
+          <div class="preview"><iframe src="/" title="Game screen preview"></iframe></div>
+        </section>
+      </div>
+    </div>
+  </main>
+  <script type="module" src="/admin/admin.js"></script>
+</body>
+</html>
