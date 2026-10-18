@@ -21,7 +21,8 @@
             <button data-cmd="game.start" class="primary" id="startBtn">Start</button>
             <button data-cmd="game.pause" id="pauseBtn">Pause</button>
             <button data-cmd="game.skip">Skip round</button>
-            <button data-cmd="game.reset" class="danger">Reset</button>
+            <button data-cmd="game.stop">Stop</button>
+            <button data-cmd="game.resetPoints" class="danger" id="resetBtn">Reset points</button>
           </div>
           <dl class="facts">
             <div><dt>Phase</dt><dd id="phase">idle</dd></div>
@@ -59,6 +60,11 @@
             <label class="toggle"><input type="checkbox" id="botsToggle"> Bot mode (20 fake viewers)</label>
             <label class="toggle"><input type="checkbox" id="stressToggle"> Stress test (50 comments/s)</label>
           </div>
+        </section>
+
+        <section class="card">
+          <h2>Leaderboard <span class="muted" id="players"></span></h2>
+          <ol class="board" id="board"><li class="muted">No points yet</li></ol>
         </section>
 
         <section class="card">

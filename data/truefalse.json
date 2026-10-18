@@ -1,0 +1,177 @@
+[
+  {
+    "statement": "The Sun is a star.",
+    "answer": true,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "Fish can breathe air like humans.",
+    "answer": false,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "A triangle has three sides.",
+    "answer": true,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "Penguins can fly.",
+    "answer": false,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "Water boils at 100 °C at sea level.",
+    "answer": true,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "Spiders are insects.",
+    "answer": false,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "The Moon orbits the Earth.",
+    "answer": true,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "A week has eight days.",
+    "answer": false,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "Bananas are yellow when ripe.",
+    "answer": true,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "Cows are carnivores.",
+    "answer": false,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "Dolphins are mammals.",
+    "answer": true,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "Snow is usually green.",
+    "answer": false,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "The Pacific is the biggest ocean.",
+    "answer": true,
+    "difficulty": "easy"
+  },
+  {
+    "statement": "A bat is a mammal.",
+    "answer": true,
+    "difficulty": "medium"
+  },
+  {
+    "statement": "Lightning never strikes the same place twice.",
+    "answer": false,
+    "difficulty": "medium"
+  },
+  {
+    "statement": "Sound travels faster than light.",
+    "answer": false,
+    "difficulty": "medium"
+  },
+  {
+    "statement": "Venus is the hottest planet in our solar system.",
+    "answer": true,
+    "difficulty": "medium"
+  },
+  {
+    "statement": "The Great Wall of China is visible from the Moon with the naked eye.",
+    "answer": false,
+    "difficulty": "medium"
+  },
+  {
+    "statement": "A tomato is a fruit.",
+    "answer": true,
+    "difficulty": "medium"
+  },
+  {
+    "statement": "Mount Everest is the tallest mountain above sea level.",
+    "answer": true,
+    "difficulty": "medium"
+  },
+  {
+    "statement": "Goldfish have a memory of only three seconds.",
+    "answer": false,
+    "difficulty": "medium"
+  },
+  {
+    "statement": "Australia is wider than the Moon.",
+    "answer": true,
+    "difficulty": "medium"
+  },
+  {
+    "statement": "Bulls get angry at the color red.",
+    "answer": false,
+    "difficulty": "medium"
+  },
+  {
+    "statement": "An adult human has 32 teeth including wisdom teeth.",
+    "answer": true,
+    "difficulty": "medium"
+  },
+  {
+    "statement": "Octopuses have blue blood.",
+    "answer": true,
+    "difficulty": "hard"
+  },
+  {
+    "statement": "Honey can stay edible for thousands of years.",
+    "answer": true,
+    "difficulty": "hard"
+  },
+  {
+    "statement": "Napoleon was extremely short for his time.",
+    "answer": false,
+    "difficulty": "hard"
+  },
+  {
+    "statement": "There are more trees on Earth than stars in the Milky Way.",
+    "answer": true,
+    "difficulty": "hard"
+  },
+  {
+    "statement": "Glass is a liquid that flows slowly.",
+    "answer": false,
+    "difficulty": "hard"
+  },
+  {
+    "statement": "A day on Venus is longer than a year on Venus.",
+    "answer": true,
+    "difficulty": "hard"
+  },
+  {
+    "statement": "Sharks are older than trees.",
+    "answer": true,
+    "difficulty": "hard"
+  },
+  {
+    "statement": "Humans only use 10% of their brains.",
+    "answer": false,
+    "difficulty": "hard"
+  },
+  {
+    "statement": "Bananas are berries but strawberries are not.",
+    "answer": true,
+    "difficulty": "hard"
+  },
+  {
+    "statement": "The Eiffel Tower can grow taller in summer.",
+    "answer": true,
+    "difficulty": "hard"
+  },
+  {
+    "statement": "Mercury is the closest planet to the Sun.",
+    "answer": true,
+    "difficulty": "easy"
+  }
+]

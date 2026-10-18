@@ -17,6 +17,7 @@
       <div class="game-name" id="gameName">Waiting for the game to start</div>
       <div class="prompt" id="prompt">?</div>
       <div class="sub" id="sub"></div>
+      <div class="options" id="options"></div>
       <div class="timer"><div class="timer-bar" id="timerBar"></div></div>
     </section>
 
@@ -40,9 +41,18 @@
         <div class="winner-label" id="winnerLabel">Round winner</div>
         <div class="winner-name" id="winnerName"></div>
         <div class="winner-time" id="winnerTime"></div>
+        <div class="winner-bonus" id="winnerBonus"></div>
         <ol class="podium" id="podium"></ol>
         <div class="winner-answer">Answer: <b id="winnerAnswer"></b></div>
         <div class="winner-stats" id="winnerStats"></div>
+      </div>
+    </section>
+
+    <!-- Total leaderboard between rounds -->
+    <section class="board" id="board">
+      <div class="board-card">
+        <div class="winner-label">Leaderboard</div>
+        <ol class="board-list" id="boardList"></ol>
       </div>
     </section>
 

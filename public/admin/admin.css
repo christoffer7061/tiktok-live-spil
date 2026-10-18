@@ -42,3 +42,6 @@ button.danger { color: var(--bad); }
 .facts dt { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
 .facts dd { margin: 0; font-weight: 600; font-size: 16px; }
 #answer { color: var(--good); }
+.board { margin: 0; padding-left: 22px; max-width: 420px; }
+.board li { padding: 2px 0; break-inside: avoid; }
+.board li span { color: var(--muted); float: right; font-variant-numeric: tabular-nums; }

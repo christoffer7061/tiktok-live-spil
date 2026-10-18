@@ -39,7 +39,10 @@ $('giftBtn').addEventListener('click', () => socket.send({ cmd: 'sim.gift', name
 $('followBtn').addEventListener('click', () => socket.send({ cmd: 'sim.follow', name: name() }));
 $('botsToggle').addEventListener('change', (e) => socket.send({ cmd: 'sim.bots', on: e.target.checked }));
 $('stressToggle').addEventListener('change', (e) => socket.send({ cmd: 'sim.stress', on: e.target.checked }));
-document.querySelectorAll('[data-cmd]').forEach((b) => b.addEventListener('click', () => socket.send({ cmd: b.dataset.cmd })));
+document.querySelectorAll('[data-cmd]').forEach((b) => b.addEventListener('click', () => {
+  if (b.dataset.cmd === 'game.resetPoints' && !confirm('Reset all points?')) return;
+  socket.send({ cmd: b.dataset.cmd });
+}));
 
 // Event log, plus events per second so the stress test is easy to read.
 let count = 0;
@@ -75,4 +78,16 @@ function renderState(st) {
   $('startBtn').disabled = st.phase !== 'idle' && !st.paused;
   $('pauseBtn').textContent = st.paused ? 'Resume' : 'Pause';
   $('pauseBtn').disabled = st.phase === 'idle';
+  if (st.vote) $('answers').textContent = st.vote.options.map((o) => `${o.number}. ${o.name}: ${o.votes}`).join(' · ');
+  $('players').textContent = st.players ? `${st.players} players` : '';
+  const rows = st.leaderboard ?? [];
+  $('board').replaceChildren(...(rows.length ? rows : [null]).map((r) => {
+    const li = document.createElement('li');
+    if (!r) { li.className = 'muted'; li.textContent = 'No points yet'; return li; }
+    li.textContent = r.name + (r.streak >= 2 ? ` 🔥${r.streak}` : '');
+    const pts = document.createElement('span');
+    pts.textContent = r.points.toLocaleString('en');
+    li.append(pts);
+    return li;
+  }));
 }

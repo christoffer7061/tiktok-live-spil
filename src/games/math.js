@@ -35,6 +35,8 @@ export default {
       prompt: `${a} ${op} ${b}`,
       display: `${a} ${op} ${b} = ?`,
       correctAnswer: String(answer),
+      answerLabel: String(answer),
+      revealDisplay: `${a} ${op} ${b} = ${answer}`,
       wrongAnswers: [answer + 1, answer - 1, answer + 10, answer - 2, answer + randInt(2, 9)].map(String),
     };
   },

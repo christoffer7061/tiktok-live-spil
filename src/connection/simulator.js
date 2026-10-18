@@ -28,6 +28,7 @@ export class Simulator {
 
     // When a question starts, each bot answers once (if bot mode is on).
     hub.on('question', (q) => this.#botsAnswer(q));
+    hub.on('vote', (v) => this.#botsVote(v));
   }
 
   start() {
@@ -100,6 +101,19 @@ export class Simulator {
         this.botTimers.delete(t);
         if (this.botsOn) this.chat(name, String(answer));
       }, delay);
+      this.botTimers.add(t);
+    }
+  }
+
+  // v = { count, seconds }: about half the bots vote for a random option.
+  #botsVote(v) {
+    if (!this.botsOn || !v) return;
+    for (const name of BOT_NAMES.slice(0, this.botCount)) {
+      if (Math.random() < 0.5) continue;
+      const t = setTimeout(() => {
+        this.botTimers.delete(t);
+        if (this.botsOn) this.chat(name, String(1 + Math.floor(Math.random() * v.count)));
+      }, rand(0.5, v.seconds * 0.8) * 1000);
       this.botTimers.add(t);
     }
   }

@@ -32,18 +32,22 @@ connect('overlay', {
 
 // --- Game state ------------------------------------------------------------------
 const seconds = (ms) => `${(ms / 1000).toFixed(1)} s`;
+const ROUND_PHASES = ['question', 'reveal', 'winner'];
 
 function render(next) {
   const prev = state;
   state = next;
   phaseEndsAt = performance.now() + next.phaseRemaining;
   stage.dataset.phase = next.phase;
+  stage.dataset.game = next.game?.key ?? '';
   stage.classList.toggle('is-paused', next.paused);
 
   const phaseChanged = prev.phase !== next.phase || prev.roundNumber !== next.roundNumber;
   if (phaseChanged && next.phase !== 'idle') clearList();
 
-  $('roundInfo').textContent = next.roundNumber ? `Round ${next.roundNumber}` : '';
+  renderRoundInfo(next);
+  $('prompt').classList.remove('text');
+  if (!ROUND_PHASES.includes(next.phase)) $('options').replaceChildren();
 
   if (next.phase === 'idle') {
     $('gameName').textContent = 'Waiting for the game to start';
@@ -56,7 +60,7 @@ function render(next) {
   }
 
   if (next.phase === 'ready') {
-    $('gameName').textContent = 'Next up';
+    $('gameName').textContent = next.multiplier > 1 ? `Double points! ${next.game?.name ?? ''}` : 'Next up';
     $('sub').textContent = next.game?.instructions ?? '';
     $('panelTitle').textContent = next.game?.name ?? '';
     $('answerCount').textContent = '';
@@ -64,12 +68,14 @@ function render(next) {
     $('list').innerHTML = '<li class="empty-hint">Get ready…</li>';
   }
 
-  if (['question', 'reveal', 'winner'].includes(next.phase)) {
+  if (ROUND_PHASES.includes(next.phase)) {
+    const q = next.question;
     $('gameName').textContent = next.game?.name ?? '';
     $('sub').textContent = '';
-    $('prompt').textContent = next.phase === 'question'
-      ? next.question.display
-      : next.question.display.replace('?', next.result?.correctAnswer ?? '?');
+    const revealed = next.phase !== 'question';
+    $('prompt').textContent = revealed && next.result?.revealDisplay ? next.result.revealDisplay : q.display;
+    $('prompt').classList.toggle('text', Boolean(q.options));
+    renderOptions(q.options, revealed ? next.result?.correctAnswer : null, phaseChanged);
     $('panelTitle').textContent = 'Fastest correct answers';
     $('answerCount').textContent = `${next.answerCount} ${next.answerCount === 1 ? 'answer' : 'answers'}`;
     renderCorrect(next.correct, next.correctCount);
@@ -77,6 +83,39 @@ function render(next) {
 
   if (next.phase === 'winner' && phaseChanged) showWinner(next.result);
   if (next.phase !== 'winner') confetti.stop();
+  if (next.phase === 'leaderboard' && phaseChanged) renderBoard(next.leaderboard);
+  if (next.phase === 'vote') renderVote(next.vote);
+}
+
+function renderRoundInfo(st) {
+  const info = $('roundInfo');
+  info.textContent = st.roundNumber ? `Round ${st.roundNumber}` : '';
+  const mult = st.phase === 'vote' || st.phase === 'leaderboard' ? st.nextMultiplier : st.multiplier;
+  if (st.roundNumber && mult > 1) {
+    const badge = document.createElement('span');
+    badge.className = 'mult';
+    badge.textContent = `${mult}× points`;
+    info.append(badge);
+  }
+}
+
+// Quiz and true/false answer tiles. After the question the right one lights up.
+function renderOptions(options, correctLetter, rebuild) {
+  const box = $('options');
+  if (!options) return box.replaceChildren();
+  if (rebuild || box.children.length !== options.length) {
+    box.replaceChildren(...options.map((o) => {
+      const el = document.createElement('div');
+      el.className = 'opt';
+      el.dataset.letter = o.letter;
+      el.innerHTML = '<span class="letter"></span><span class="text"></span>';
+      el.querySelector('.letter').textContent = o.letter;
+      el.querySelector('.text').textContent = o.text;
+      return el;
+    }));
+  }
+  box.classList.toggle('reveal', Boolean(correctLetter));
+  for (const el of box.children) el.classList.toggle('right', el.dataset.letter === correctLetter);
 }
 
 // Keyed by name so only NEW names slide in; existing rows stay put.
@@ -96,15 +135,18 @@ function renderCorrect(rows, total) {
     else {
       li = document.createElement('li');
       li.dataset.name = r.name;
-      li.innerHTML = '<span class="rank"></span><span class="who"></span><span class="ms"></span>';
+      li.innerHTML = '<span class="rank"></span><span class="who"></span><span class="streak"></span><span class="ms"></span>';
     }
     li.querySelector('.rank').textContent = `${r.rank}.`;
     li.querySelector('.who').textContent = r.name;
+    li.querySelector('.streak').textContent = r.streak >= 2 ? `🔥${r.streak}` : '';
     li.querySelector('.ms').textContent = seconds(r.ms);
     frag.append(li);
   }
   list.replaceChildren(frag);
-  const others = total - rows.length;
+  // When quiz options take up room, fewer rows fit: hide the overflow and count it as "others".
+  while (list.children.length > 1 && list.scrollHeight > list.clientHeight + 2) list.lastChild.remove();
+  const others = total - list.children.length;
   $('more').textContent = others > 0 ? `+ ${others} ${others === 1 ? 'other' : 'others'}` : '';
 }
 
@@ -117,7 +159,8 @@ function showWinner(result) {
   $('winnerLabel').textContent = w ? 'Round winner' : 'Nobody got it right!';
   $('winnerName').textContent = w ? w.name : '😮';
   $('winnerTime').textContent = w ? `${seconds(w.ms)} · +${w.points} points` : 'Better luck next round';
-  $('winnerAnswer').textContent = result?.correctAnswer ?? '';
+  $('winnerBonus').textContent = w?.bonus ? `🔥 ${w.streak} in a row: +${w.bonus} streak bonus` : '';
+  $('winnerAnswer').textContent = result?.answerLabel ?? result?.correctAnswer ?? '';
   $('winnerStats').textContent = `${result?.correctCount ?? 0} of ${result?.answerCount ?? 0} answered correctly`;
   const medals = ['🥇', '🥈', '🥉'];
   $('podium').replaceChildren(...(result?.top3 ?? []).map((r, i) => {
@@ -130,11 +173,51 @@ function showWinner(result) {
   if (w) confetti.start();
 }
 
+function renderBoard(rows = []) {
+  const list = $('boardList');
+  if (!rows.length) {
+    list.innerHTML = '<li class="empty-hint">No points yet. Answer to get on the board!</li>';
+    return;
+  }
+  list.replaceChildren(...rows.map((r, i) => {
+    const li = document.createElement('li');
+    li.style.animationDelay = `${i * 70}ms`;
+    li.innerHTML = '<span class="rank"></span><span class="who"></span><span class="streak"></span><span class="pts"></span>';
+    li.querySelector('.rank').textContent = `${r.rank}.`;
+    li.querySelector('.who').textContent = r.name;
+    li.querySelector('.streak').textContent = r.streak >= 2 ? `🔥${r.streak}` : '';
+    li.querySelector('.pts').textContent = r.points.toLocaleString('en');
+    return li;
+  }));
+}
+
+function renderVote(vote) {
+  if (!vote) return;
+  $('gameName').textContent = 'Vote for the next game!';
+  $('prompt').textContent = 'Next game?';
+  $('prompt').classList.add('text');
+  $('sub').textContent = '';
+  $('panelTitle').textContent = `Type ${vote.options.map((o) => o.number).join(' or ')} in the chat`;
+  $('answerCount').textContent = `${vote.total} ${vote.total === 1 ? 'vote' : 'votes'}`;
+  $('more').textContent = '';
+  const max = Math.max(1, ...vote.options.map((o) => o.votes));
+  $('list').replaceChildren(...vote.options.map((o) => {
+    const li = document.createElement('li');
+    li.className = 'vote-row old';
+    li.innerHTML = '<span class="num"></span><div class="body"><div class="name"></div><div class="bar"><div></div></div></div><span class="votes"></span>';
+    li.querySelector('.num').textContent = o.number;
+    li.querySelector('.name').textContent = o.name;
+    li.querySelector('.bar div').style.width = `${(o.votes / max) * 100}%`;
+    li.querySelector('.votes').textContent = o.votes;
+    return li;
+  }));
+}
+
 // Timer bar and the 3-2-1 countdown run locally, smoothly, at 60 fps.
 function tick() {
   const remaining = state.paused ? state.phaseRemaining : Math.max(0, phaseEndsAt - performance.now());
   const frac = state.phaseDuration ? remaining / state.phaseDuration : 0;
-  $('timerBar').style.transform = `scaleX(${state.phase === 'question' ? frac : state.phase === 'ready' ? 1 : 0})`;
+  $('timerBar').style.transform = `scaleX(${['question', 'vote'].includes(state.phase) ? frac : state.phase === 'ready' ? 1 : 0})`;
   if (state.phase === 'ready') $('prompt').textContent = String(Math.max(1, Math.ceil(remaining / 1000)));
   requestAnimationFrame(tick);
 }

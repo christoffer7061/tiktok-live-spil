@@ -7,6 +7,7 @@ import { Round } from '../src/engine/round.js';
 import { Engine } from '../src/engine/engine.js';
 import { makeEvent } from '../src/events.js';
 import math from '../src/games/math.js';
+import { Scoreboard } from '../src/engine/scoreboard.js';
 
 const QUESTION = { prompt: '7 × 8', display: '7 × 8 = ?', correctAnswer: '56', wrongAnswers: ['55'] };
 const chat = (name, text, receivedAt) => makeEvent('chat', { user: { id: name, name }, text, receivedAt });
@@ -85,7 +86,7 @@ test('a round where nobody answers correctly has no winner', () => {
   assert.equal(s.correctAnswer, '56');
 });
 
-test('engine runs ready → question → reveal → winner → next round', (t) => {
+test('engine runs ready → question → reveal → winner → leaderboard → next round', (t) => {
   t.mock.timers.enable({ apis: ['setTimeout'] });
   let clock = 0;
   const hub = new EventEmitter();
@@ -124,6 +125,10 @@ test('engine runs ready → question → reveal → winner → next round', (t) 
   clock += 4000; t.mock.timers.tick(4000);
   assert.equal(engine.phase, 'winner');
   clock += 6000; t.mock.timers.tick(6000);
+  assert.equal(engine.phase, 'leaderboard');
+  assert.deepEqual(engine.snapshot().leaderboard.map((p) => p.name), ['Bo', 'Anna']);
+  // Only one game type here, so there is nothing to vote on.
+  clock += 6000; t.mock.timers.tick(6000);
   assert.equal(engine.phase, 'ready');
   assert.equal(engine.roundNumber, 2);
   engine.stop();
@@ -149,5 +154,88 @@ test('pausing during a question does not count as answer time', (t) => {
   hub.emit('event', chat('Anna', '56', clock + 1000));
   assert.equal(engine.snapshot().correct[0].ms, 3000); // 2 s before pause + 1 s after
   assert.ok(clock > start);
+  engine.stop();
+});
+
+test('streak bonus: +100 per correct answer in a row, max +500, reset by a miss', () => {
+  const board = new Scoreboard({ streakBonusPerAnswer: 100, streakBonusMax: 500 });
+  const play = (answers) => {
+    const r = newRound();
+    for (const [name, text] of answers) r.submit(chat(name, text, 1000)); // instant = 1000 points
+    return board.applyRound(r);
+  };
+  const bonuses = [];
+  for (let i = 0; i < 8; i++) bonuses.push(play([['Anna', '56']]).get('Anna').bonus);
+  assert.deepEqual(bonuses, [0, 100, 200, 300, 400, 500, 500, 500]);
+  assert.equal(board.top()[0].points, 8000 + 2500);
+
+  play([['Anna', '1']]); // wrong answer resets
+  assert.equal(board.streakOf('Anna'), 0);
+  play([['Anna', '56']]);
+  play([['Bo', '56']]); // Anna misses this round
+  assert.equal(board.streakOf('Anna'), 0);
+  assert.equal(board.streakOf('Bo'), 1);
+});
+
+test('total leaderboard adds rounds together and sorts by points', () => {
+  const board = new Scoreboard();
+  const r1 = newRound();
+  r1.submit(chat('Anna', '56', 1000));   // 1000
+  r1.submit(chat('Bo', '56', 11000));    // 750
+  board.applyRound(r1);
+  const r2 = newRound();
+  r2.submit(chat('Bo', '56', 1000));     // 1000 + 100 streak
+  board.applyRound(r2);
+  assert.deepEqual(board.top().map((p) => [p.name, p.points]), [['Bo', 1850], ['Anna', 1000]]);
+  board.addBonus('Carla', 'Carla', 50);
+  assert.equal(board.top().length, 3);
+});
+
+function threeTypeEngine(t) {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const fixed = (key) => ({ ...math, key, name: key, createQuestion: () => QUESTION });
+  const hub = new EventEmitter();
+  let clock = 0;
+  const engine = new Engine(hub, { gameTypes: ['a', 'b', 'c'], round: { readySeconds: 1, answerSeconds: 1, revealSeconds: 1, winnerSeconds: 1, leaderboardSeconds: 1, voteSeconds: 10 } }, {
+    types: { a: fixed('a'), b: fixed('b'), c: fixed('c') },
+    now: () => clock,
+  });
+  // Step one second at a time so each phase can schedule the next.
+  const advance = (ms) => { for (let i = 0; i < ms; i += 1000) { clock += 1000; t.mock.timers.tick(1000); } };
+  return { engine, hub, advance };
+}
+
+test('viewers vote for the next game; the current game is not an option', (t) => {
+  const { engine, hub, advance } = threeTypeEngine(t);
+  engine.start();
+  const first = engine.typeKey;
+  advance(5000); // ready, question, reveal, winner, leaderboard
+  assert.equal(engine.phase, 'vote');
+  const options = engine.snapshot().vote.options;
+  assert.equal(options.length, 2);
+  assert.ok(!options.some((o) => o.key === first));
+
+  hub.emit('event', chat('Anna', '2', 0));
+  hub.emit('event', chat('Anna', '1', 0));   // only the first vote counts
+  hub.emit('event', chat('Bo', 'vote 2', 0));
+  hub.emit('event', chat('Carla', '1', 0));
+  hub.emit('event', chat('Dev', 'hello', 0)); // not a vote
+  hub.emit('event', chat('Emil', '7', 0));    // no such option
+  assert.deepEqual(engine.snapshot().vote.options.map((o) => o.votes), [1, 2]);
+
+  advance(10000);
+  assert.equal(engine.phase, 'ready');
+  assert.equal(engine.typeKey, options[1].key);
+  engine.stop();
+});
+
+test('with no votes the next game is random but never the same twice in a row', (t) => {
+  const { engine, advance } = threeTypeEngine(t);
+  engine.start();
+  for (let i = 0; i < 20; i++) {
+    const before = engine.typeKey;
+    advance(15000); // a whole round including an empty vote
+    assert.notEqual(engine.typeKey, before);
+  }
   engine.stop();
 });

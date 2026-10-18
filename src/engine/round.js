@@ -10,7 +10,7 @@ export class Round {
     this.startedAt = startedAt;
     this.limitMs = limitMs;
     this.maxPoints = maxPoints;
-    this.answered = new Map(); // userId -> { correct, ms, points }
+    this.answered = new Map(); // userId -> { name, correct, ms, points }
     this.correct = [];         // [{ userId, name, ms, points }], fastest first
     this.wrongCount = 0;
   }
@@ -28,7 +28,7 @@ export class Round {
 
     const correct = this.type.isCorrect(event.text, this.question);
     const points = correct ? computePoints(ms, this.limitMs, this.maxPoints) : 0;
-    this.answered.set(userId, { correct, ms, points });
+    this.answered.set(userId, { name: event.user.name, correct, ms, points });
     if (!correct) {
       this.wrongCount++;
       return 'wrong';
